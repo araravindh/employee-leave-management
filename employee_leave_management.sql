@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS employee_leave_management;
+USE employee_leave_management;
+CREATE TABLE employees(employee_id INT PRIMARY KEY AUTO_INCREMENT, employee_name VARCHAR(100) NOT NULL, email VARCHAR(120) NOT NULL UNIQUE, department VARCHAR(80) NOT NULL, phone VARCHAR(15));
+CREATE TABLE leave_balance(employee_id INT PRIMARY KEY, total_days INT NOT NULL DEFAULT 12, used_days INT NOT NULL DEFAULT 0, FOREIGN KEY(employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE, CHECK(total_days>=0 AND used_days>=0 AND used_days<=total_days));
+CREATE TABLE leave_requests(leave_id INT PRIMARY KEY AUTO_INCREMENT, employee_id INT NOT NULL, leave_type VARCHAR(40) NOT NULL, number_of_days INT NOT NULL, start_date DATE NOT NULL, end_date DATE NOT NULL, reason VARCHAR(500) NOT NULL, status ENUM('PENDING','APPROVED','REJECTED') NOT NULL DEFAULT 'PENDING', applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(employee_id) REFERENCES employees(employee_id) ON DELETE CASCADE, CHECK(number_of_days>0), CHECK(end_date>=start_date));
